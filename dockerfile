@@ -1,17 +1,16 @@
-# Stage 1: Build the SvelteKit application
-FROM node:16 AS build
+FROM node:18-alpine AS builder
 WORKDIR /app
-COPY package.json package-lock.json ./
+COPY package*.json .
 RUN npm ci
 COPY . .
 RUN npm run build
+RUN npm prune --production
 
-# Stage 2: Run the application
-FROM node:16 AS runtime
+FROM node:18-alpine
 WORKDIR /app
-COPY --from=build /app/build ./build
-COPY --from=build /app/package.json ./package.json
-COPY --from=build /app/package-lock.json ./package-lock.json
-RUN npm ci --production
+COPY --from=builder /app/build build/
+COPY --from=builder /app/node_modules node_modules/
+COPY package.json .
 EXPOSE 3000
-CMD ["node", "build"]
+ENV NODE_ENV=production
+CMD [ "node", "build" ]

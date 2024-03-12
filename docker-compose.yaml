@@ -3,18 +3,19 @@ services:
   app:
     build: .
     ports:
-      - "3000:3000"
+      - '3000:3000'
     environment:
-      - DATABASE_URL: ${DATABASE_URL}
+      - DATABASE_URL=${DATABASE_URL}
     depends_on:
       - db
   db:
     image: postgres:13
-    ports: ${DATABASE_PORTS}
+    ports:
+      - ${DATABASE_PORTS}
     environment:
-      - POSTGRES_USER: ${DATABASE_USER}
-      - POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
-      - POSTGRES_DB: ${DATABASE_NAME}
+      - POSTGRES_USER=${DATABASE_USER}
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+      - POSTGRES_DB=${DATABASE_NAME}
     volumes:
       - postgres_data:/var/lib/postgresql/data
 volumes:
